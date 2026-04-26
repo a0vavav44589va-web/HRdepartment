@@ -95,10 +95,7 @@ namespace HRdepartment
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;
             Form10 form10 = Application.OpenForms.OfType<Form10>().FirstOrDefault();
-            if (form10 != null)
-            {
-                form10.WriteToHistory(currentUserID, "добавление нарушения");
-            }
+            form10?.WriteToHistory(currentUserID, "добавление нарушения");
             this.Close();
         }
 

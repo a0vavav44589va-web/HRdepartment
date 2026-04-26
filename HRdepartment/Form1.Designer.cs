@@ -165,14 +165,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private HRdepartmentDataSet hRdepartmentDataSet;
-        private System.Windows.Forms.BindingSource usersBindingSource;
-        private HRdepartmentDataSetTableAdapters.UsersTableAdapter usersTableAdapter;
-        private HRdepartmentDataSetTableAdapters.TableAdapterManager tableAdapterManager;
+        public System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.TextBox textBox2;
+        public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button button2;
+        public HRdepartmentDataSet hRdepartmentDataSet;
+        public System.Windows.Forms.BindingSource usersBindingSource;
+        public HRdepartmentDataSetTableAdapters.UsersTableAdapter usersTableAdapter;
+        public HRdepartmentDataSetTableAdapters.TableAdapterManager tableAdapterManager;
     }
 }
 

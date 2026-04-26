@@ -13,6 +13,7 @@ namespace HRdepartment
     public partial class Form8 : Form
     {
         int currentUserID;
+        private DataRow[] _cachedVacations;
         public Form8(int userID)
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace HRdepartment
             this.employeesTableAdapter.Fill(this.hRdepartmentDataSet.Employees);
             // TODO: данная строка кода позволяет загрузить данные в таблицу "hRdepartmentDataSet.Vacations". При необходимости она может быть перемещена или удалена.
             this.vacationsTableAdapter.Fill(this.hRdepartmentDataSet.Vacations);
+            _cachedVacations = this.hRdepartmentDataSet.Vacations.Select();
 
         }
 
@@ -73,7 +75,7 @@ namespace HRdepartment
             DateTime endDate = endDateDateTimePicker.Value;
             if (!CheckVacationDuration(startDate, endDate))
                 return;
-            if (!CheckVacationLimit(employeeID, startDate, endDate))
+            if (!CheckVacationLimit(startDate, endDate))
                 return;
             DataRow newRow = this.hRdepartmentDataSet.Vacations.NewRow();
             newRow["EmployeeID"] = employeeID;
@@ -83,47 +85,32 @@ namespace HRdepartment
             this.hRdepartmentDataSet.Vacations.Rows.Add(newRow);
             this.vacationsTableAdapter.Update(this.hRdepartmentDataSet.Vacations);
             MessageBox.Show("Отпуск успешно добавлен!");
-            Form3 form3 = Application.OpenForms.OfType<Form3>().FirstOrDefault();
-            if (form3 != null)
-            {
-                form3.WriteToHistory(currentUserID, "добавление отпуска");
-            }
+            Form7 form7 = Application.OpenForms.OfType<Form7>().FirstOrDefault();
+            form7?.WriteToHistory(currentUserID, "добавление отпуска");
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
 
 
-        private bool CheckVacationLimit(int employeeID, DateTime startDate, DateTime endDate, int excludeVacationID = -1)
+        private bool CheckVacationLimit(DateTime startDate, DateTime endDate, int excludeVacationID = -1)
         {
-            DataRow[] allVacations = this.hRdepartmentDataSet.Vacations.Select();
-
+            DataRow[] allVacations = _cachedVacations;
             int overlappingCount = 0;
-
             foreach (DataRow row in allVacations)
             {
                 int vacationID = (int)row["VacationID"];
-                if (excludeVacationID != -1 && vacationID == excludeVacationID)
-                    continue;
+                if (excludeVacationID != -1 && vacationID == excludeVacationID) continue;
 
-                int empID = (int)row["EmployeeID"];
                 DateTime rowStart = (DateTime)row["StartDate"];
                 DateTime rowEnd = (DateTime)row["EndDate"];
-                bool isOverlap = (startDate <= rowEnd && endDate >= rowStart);
-
-                if (isOverlap)
-                {
-                    overlappingCount++;
-                }
+                if (startDate <= rowEnd && endDate >= rowStart) overlappingCount++;
             }
-
             if (overlappingCount >= 3)
             {
-                MessageBox.Show("В данный период уже 3 сотрудника в отпуске!\nБольше трёх одновременно отпускать нельзя.",
-                    "Лимит отпускников", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("В данный период уже 3 сотрудника в отпуске!");
                 return false;
             }
-
             return true;
         }
         private bool CheckVacationDuration(DateTime startDate, DateTime endDate)

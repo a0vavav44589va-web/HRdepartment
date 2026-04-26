@@ -13,7 +13,6 @@ namespace HRdepartment
     public partial class Form5 : Form
     {
         int currentUserID;
-        private int _editingEmployeeID;
         public static int SelectedEmployeeID = -1;
         public Form5(int userID)
         {
@@ -109,10 +108,7 @@ namespace HRdepartment
             }
             this.employeesTableAdapter.Update(this.hRdepartmentDataSet.Employees);
             Form3 form3 = Application.OpenForms.OfType<Form3>().FirstOrDefault();
-            if (form3 != null)
-            {
-                form3.WriteToHistory(currentUserID, "редактирование сотрудника");
-            }
+            form3?.WriteToHistory(currentUserID, "редактирование сотрудника");
             MessageBox.Show("Данные сохранены!", "Успех",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 

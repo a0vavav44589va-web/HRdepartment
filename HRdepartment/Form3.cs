@@ -55,12 +55,18 @@ namespace HRdepartment
         {
             if (employeesDataGridView.Columns["Experience"] == null)
             {
-                DataGridViewTextBoxColumn expColumn = new DataGridViewTextBoxColumn();
-                expColumn.Name = "Experience";
-                expColumn.HeaderText = "Стаж";
-                expColumn.ReadOnly = true;
+                DataGridViewTextBoxColumn expColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "Experience",
+                    HeaderText = "Стаж",
+                    ReadOnly = true
+                };
                 employeesDataGridView.Columns.Add(expColumn);
             }
+
+            // ОПТИМИЗАЦИЯ: сегодняшняя дата вычисляется 1 раз до цикла
+            DateTime today = DateTime.Today;
+
             for (int i = 0; i < employeesDataGridView.Rows.Count - 1; i++)
             {
                 DataGridViewRow row = employeesDataGridView.Rows[i];
@@ -71,11 +77,8 @@ namespace HRdepartment
                     try
                     {
                         DateTime hireDate = Convert.ToDateTime(hireDateValue);
-                        DateTime today = DateTime.Now;
-
                         int years = today.Year - hireDate.Year;
                         if (today < hireDate.AddYears(years)) years--;
-
                         string yearsWord = GetYearsWord(years);
                         row.Cells["Experience"].Value = $"{years} {yearsWord}";
                     }

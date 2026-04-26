@@ -171,10 +171,7 @@ namespace HRdepartment
             this.DialogResult = DialogResult.OK;
 
             Form3 form3 = Application.OpenForms.OfType<Form3>().FirstOrDefault();
-            if (form3 != null)
-            {
-                form3.WriteToHistory(Form3.CurrentUserID, "добавление сотрудника");
-            }
+            form3?.WriteToHistory(currentUserID, "добавление сотрудника");
 
             this.Close();
         }

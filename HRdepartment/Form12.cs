@@ -94,10 +94,7 @@ namespace HRdepartment
             this.violationsTableAdapter.Update(this.hRdepartmentDataSet.Violations);
 
             Form10 form10 = Application.OpenForms.OfType<Form10>().FirstOrDefault();
-            if (form10 != null)
-            {
-                form10.WriteToHistory(currentUserID, "редактирование нарушения");
-            }
+            form10?.WriteToHistory(currentUserID, "редактирование нарушения");
 
             MessageBox.Show("Данные сохранены!");
             this.Close();

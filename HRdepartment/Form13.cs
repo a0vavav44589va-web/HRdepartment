@@ -79,7 +79,6 @@ namespace HRdepartment
             dataGridView1.Rows.Clear();
             DateTime? fromDate = null;
             DateTime? toDate = null;
-
             if (checkBox1.Checked)
             {
                 fromDate = dateTimePicker1.Value.Date;
@@ -91,10 +90,9 @@ namespace HRdepartment
                     return;
                 }
             }
-
             foreach (DataRow row in employees.Rows)
             {
-                // ДОБАВИТЬ ПРОВЕРКУ ПО ДАТЕ
+                // Проверка по дате
                 bool matchDate = true;
                 if (checkBox1.Checked)
                 {
@@ -104,17 +102,14 @@ namespace HRdepartment
                     if (toDate.HasValue && hireDate > toDate.Value)
                         matchDate = false;
                 }
-
                 if (!matchDate) continue;
-
-                // Проверка по тексту (если есть)
+                // Проверка по тексту (ОПТИМИЗИРОВАНО)
                 bool matchText = true;
                 if (!string.IsNullOrEmpty(searchText))
                 {
-                    string fullName = $"{row["Familia"]} {row["Name"]} {row["Otchestvo"]}".ToLower();
-                    string tabNumber = row["TabNumber"].ToString().ToLower();
-                    string department = row["Department"].ToString().ToLower();
-                    matchText = fullName.Contains(searchText) || tabNumber.Contains(searchText) || department.Contains(searchText);
+                    // Объединяем все поля в одну строку и проверяем один раз
+                    string fullData = $"{row["Familia"]} {row["Name"]} {row["Otchestvo"]} {row["TabNumber"]} {row["Department"]}".ToLower();
+                    matchText = fullData.Contains(searchText);
                 }
 
                 if (matchText && matchDate)
@@ -122,7 +117,6 @@ namespace HRdepartment
                     AddRowToResults(row);
                 }
             }
-
             if (dataGridView1.Rows.Count == 0)
             {
                 MessageBox.Show("Ничего не найдено!");
@@ -213,7 +207,7 @@ namespace HRdepartment
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count == 0)
+            if (dataGridView1.Rows.Count == 1)
             {
                 MessageBox.Show("Нет данных для экспорта!");
                 return;
@@ -243,7 +237,7 @@ namespace HRdepartment
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count == 0)
+            if (dataGridView1.Rows.Count == 1)
             {
                 MessageBox.Show("Нет данных для экспорта!");
                 return;
